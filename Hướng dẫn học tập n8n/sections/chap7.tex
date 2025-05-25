@@ -1,0 +1,708 @@
+\chapter{Xử lý dữ liệu nâng cao trong n8n}
+
+\section{Function Node \& Code Snippets}
+
+\subsection{Giới thiệu Function Node}
+
+Function Node là một trong những công cụ mạnh mẽ nhất của n8n, cho phép bạn viết mã JavaScript để xử lý dữ liệu theo cách tùy chỉnh. Function Node đặc biệt hữu ích khi các node có sẵn không đáp ứng được nhu cầu cụ thể của bạn.
+
+\subsubsection{Cấu trúc cơ bản của Function Node}
+
+\begin{lstlisting}[language=JavaScript]
+items = items.map(item => {
+  return item;
+});
+return items;
+\end{lstlisting}
+
+\subsubsection{Ví dụ 1: Chuyển đổi định dạng dữ liệu}
+
+Giả sử bạn nhận được danh sách sản phẩm từ một API và cần chuyển đổi định dạng để phù hợp với hệ thống của bạn:
+
+\begin{lstlisting}[language=JavaScript]
+items = items.map(item => {
+  const newItem = {
+    productId: item.json.id,
+    name: item.json.product_name,
+    price: parseFloat(item.json.price),
+    inStock: item.json.stock_quantity > 0,
+    categories: item.json.category.split(',').map(cat => cat.trim())
+  };
+  
+  item.json = newItem;
+  
+  return item;
+});
+
+return items;
+\end{lstlisting}
+
+\subsubsection{Ví dụ 2: Lọc và tổng hợp dữ liệu}
+- Lọc sản phẩm có giá trên 100 và còn hàng
+
+- Tính tổng giá trị hàng tồn kho
+
+- Trả về một item mới chứa thông tin tổng hợp
+
+\begin{lstlisting}[language=JavaScript]
+const filteredItems = items.filter(item => 
+  item.json.price > 100 && item.json.inStock === true
+);
+
+let totalValue = 0;
+filteredItems.forEach(item => {
+  totalValue += item.json.price * item.json.stock_quantity;
+});
+
+return [{
+  json: {
+    filteredProducts: filteredItems.map(item => item.json),
+    totalProducts: filteredItems.length,
+    totalInventoryValue: totalValue,
+    generatedAt: new Date().toISOString()
+  }
+}];
+\end{lstlisting}
+
+\subsection{Các mẹo và thủ thuật với Function Node}
+
+\subsubsection{Sử dụng thư viện bên ngoài}
+
+n8n cho phép bạn sử dụng nhiều thư viện JavaScript phổ biến:
+
+- Sử dụng thư viện moment để xử lý thời gian
+
+\begin{lstlisting}[language=JavaScript]
+const moment = require('moment');
+
+items = items.map(item => {
+  // convert timestamp 
+  item.json.createdAtFormatted = moment(item.json.created_at).format('DD/MM/YYYY HH:mm');
+  
+  // Calc day to now
+  item.json.daysSinceCreation = moment().diff(moment(item.json.created_at), 'days');
+  
+  return item;
+});
+
+return items;
+\end{lstlisting}
+\subsubsection{Xử lý lỗi trong Function Node}
+
+\begin{lstlisting}[language=JavaScript]
+items = items.map(item => {
+  try {
+    if (typeof item.json.data === 'string') {
+      item.json.data = JSON.parse(item.json.data);
+    }
+  } catch (error) {
+    // Process error
+    item.json.data = { error: "data not valid" };
+    item.json.parseError = error.message;
+  }
+  
+  return item;
+});
+
+return items;
+\end{lstlisting}
+
+\subsubsection{Kết hợp dữ liệu từ nhiều node}
+
+Giả sử node 1 trả về thông tin sản phẩm và node 2 trả về thông tin giá
+
+\begin{lstlisting}[language=JavaScript]
+const productsData = $node["HTTP Request"].json.products;
+const pricesData = $node["HTTP Request1"].json.prices;
+
+// combind
+const combinedData = productsData.map(product => {
+  const price = pricesData.find(p => p.product_id === product.id);
+  
+  return {
+    ...product,
+    price: price ? price.amount : 0,
+    currency: price ? price.currency : 'USD'
+  };
+});
+
+return [{ json: { combinedData } }];
+\end{lstlisting}
+
+\section{Kết nối database: MySQL, PostgreSQL, MongoDB, Nocodb}
+
+\subsection{Thiết lập kết nối cơ sở dữ liệu}
+
+n8n cung cấp nhiều node để kết nối với các loại cơ sở dữ liệu phổ biến. Dưới đây là hướng dẫn thiết lập và sử dụng các kết nối này.
+
+\subsubsection{Kết nối MySQL}
+
+\paragraph{Thiết lập Credentials:}
+\begin{itemize}
+    \item Trong n8n, vào phần Credentials và chọn "New Credentials"
+    \item Chọn loại "MySQL"
+    \item Nhập thông tin kết nối: Host, Port, Database, User, Password
+    \item Lưu lại credentials
+\end{itemize}
+
+\paragraph{Ví dụ: Tự động đồng bộ dữ liệu từ API vào MySQL}
+
+Workflow:
+\begin{itemize}
+    \item HTTP Request Node để lấy dữ liệu từ API
+    \item Function Node để xử lý và chuẩn bị dữ liệu
+    \item MySQL Node để lưu dữ liệu
+\end{itemize}
+
+\begin{lstlisting}[language=JavaScript]
+items = items.map(item => {
+  return {
+    json: {
+      operation: "insert",
+      table: "products",
+      data: {
+        name: item.json.name,
+        sku: item.json.sku,
+        price: item.json.price,
+        stock: item.json.available_quantity,
+        updated_at: new Date().toISOString()
+      }
+    }
+  };
+});
+
+return items;
+\end{lstlisting}
+
+Cấu hình MySQL Node:
+\begin{itemize}
+    \item Chọn credentials đã tạo
+    \item Operation: Execute Query
+    \item Query tự động được tạo dựa trên dữ liệu từ Function Node
+\end{itemize}
+
+\subsubsection{Kết nối PostgreSQL}
+
+Tương tự như MySQL, nhưng với một số đặc điểm riêng:
+
+\paragraph{Ví dụ: Thực hiện thao tác UPSERT trong PostgreSQL}
+
+\begin{lstlisting}[language=JavaScript]
+items = items.map(item => {
+  return {
+    json: {
+      query: `
+        INSERT INTO customers (email, name, phone, last_order_date)
+        VALUES ($1, $2, $3, $4)
+        ON CONFLICT (email) 
+        DO UPDATE SET 
+          name = $2,
+          phone = $3,
+          last_order_date = $4,
+          updated_at = NOW()
+      `,
+      values: [
+        item.json.email,
+        item.json.name,
+        item.json.phone,
+        item.json.order_date
+      ]
+    }
+  };
+});
+
+return items;
+\end{lstlisting}
+
+\subsubsection{Kết nối MongoDB}
+
+MongoDB là cơ sở dữ liệu NoSQL phổ biến và n8n cũng hỗ trợ tốt:
+
+\paragraph{Ví dụ: Tìm kiếm và cập nhật dữ liệu trong MongoDB}
+
+Workflow:
+\begin{itemize}
+    \item Trigger Node (ví dụ: Webhook)
+    \item MongoDB Node để tìm document
+    \item Function Node để xử lý
+    \item MongoDB Node thứ hai để cập nhật
+\end{itemize}
+
+Cấu hình MongoDB Node (Tìm kiếm):
+\begin{itemize}
+    \item Operation: Find
+    \item Collection: orders
+    \item Options: Thiết lập query để tìm đơn hàng theo ID
+\end{itemize}
+Giả sử data từ MongoDB chứa thông tin đơn hàng
+Function Node:
+\begin{lstlisting}[language=JavaScript]
+items = items.map(item => {
+  const order = item.json;
+  
+  let totalValue = 0;
+  order.items.forEach(product => {
+    totalValue += product.price * product.quantity;
+  });
+  
+  return {
+    json: {
+      updateOne: {
+        filter: { _id: order._id },
+        update: {
+          $set: {
+            total_value: totalValue,
+            shipping_status: "ready_to_ship",
+            updated_at: new Date()
+          }
+        }
+      }
+    }
+  };
+});
+
+return items;
+\end{lstlisting}
+
+\subsubsection{Kết nối NocoDB}
+
+NocoDB là một giải pháp mã nguồn mở biến cơ sở dữ liệu thành Airtable-like. n8n có thể kết nối với NocoDB qua API:
+
+\paragraph{Thiết lập Credentials NocoDB:}
+\begin{itemize}
+    \item Tạo API token trong NocoDB
+    \item Trong n8n, tạo credentials loại "API Key Auth"
+    \item Nhập API token vào trường "API Key Value"
+\end{itemize}
+
+\paragraph{Ví dụ: Đồng bộ dữ liệu từ CRM vào NocoDB}
+
+HTTP Request Node (lấy dữ liệu từ CRM):
+\begin{itemize}
+    \item Method: GET
+    \item URL: https://your-crm-api.com/contacts
+    \item Authentication: Chọn credentials phù hợp
+\end{itemize}
+
+
+Function Node (chuẩn bị dữ liệu):Chuyển đổi từ định dạng CRM sang định dạng NocoDB
+\begin{lstlisting}[language=JavaScript]
+items = items.map(contact => {
+  return {
+    json: {
+      Name: `${contact.json.first_name} ${contact.json.last_name}`,
+      Email: contact.json.email,
+      Phone: contact.json.phone,
+      Company: contact.json.company,
+      LastContact: contact.json.last_contacted_at,
+      Tags: contact.json.tags.join(', ')
+    }
+  };
+});
+
+return items;
+\end{lstlisting}
+
+HTTP Request Node (gửi vào NocoDB):
+\begin{itemize}
+    \item Method: POST
+    \item URL: https://nocodb.com/api/v1/tables/YOUR\_TABLE\_ID/records
+    \item Headers: xc-auth: YOUR\_API\_TOKEN
+    \item Body: Item Binary => json
+\end{itemize}
+
+\subsection{Các kỹ thuật Database nâng cao}
+
+\subsubsection{Sử dụng Transaction}
+
+Với các cơ sở dữ liệu hỗ trợ transaction như MySQL và PostgreSQL:
+
+\begin{lstlisting}[language=JavaScript]
+return [
+  {
+    json: {
+      query: "BEGIN"
+    }
+  },
+  {
+    json: {
+      query: "INSERT INTO orders (customer_id, total) VALUES ($1, $2) RETURNING id",
+      values: [customerId, total]
+    }
+  },
+  {
+    json: {
+      __nextNode: "Function Node"
+    }
+  },
+  {
+    json: {
+      query: "COMMIT"
+    }
+  }
+];
+\end{lstlisting}
+
+Function Node để xử lý order\_id:
+\begin{lstlisting}[language=JavaScript]
+const orderId = items[0].json.id;
+
+return orderItems.map(item => {
+  return {
+    json: {
+      query: "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ($1, $2, $3, $4)",
+      values: [orderId, item.product_id, item.quantity, item.price]
+    }
+  };
+});
+\end{lstlisting}
+\subsubsection{Thực hiện truy vấn phức tạp}
+
+\begin{lstlisting}[language=JavaScript]
+return [
+  {
+    json: {
+      query: `
+        SELECT 
+          products.id, products.name, products.price,
+          categories.name AS category,
+          COUNT(order_items.id) AS times_ordered
+        FROM 
+          products
+        LEFT JOIN 
+          product_categories ON products.id = product_categories.product_id
+        LEFT JOIN 
+          categories ON product_categories.category_id = categories.id
+        LEFT JOIN 
+          order_items ON products.id = order_items.product_id
+        WHERE 
+          products.active = 1
+        GROUP BY 
+          products.id, categories.id
+        ORDER BY 
+          times_ordered DESC
+        LIMIT 20
+      `
+    }
+  }
+];
+\end{lstlisting}
+
+\section{Làm việc với API nâng cao (OAuth, Auth Token)}
+
+\subsection{Xác thực OAuth trong n8n}
+
+OAuth là giao thức xác thực phổ biến cho các API hiện đại. n8n hỗ trợ nhiều dịch vụ OAuth như Google, Facebook, Twitter, và nhiều dịch vụ khác.
+
+\subsubsection{Thiết lập OAuth 2.0 credentials}
+
+\begin{enumerate}
+    \item Đăng ký ứng dụng với nhà cung cấp dịch vụ (Google, Facebook, v.v.)
+    \item Nhận Client ID và Client Secret
+    \item Trong n8n, tạo credentials mới loại OAuth2 API
+    \item Nhập thông tin:
+    \begin{itemize}
+        \item Client ID và Client Secret
+        \item Authorization URL
+        \item Token URL
+        \item Scope cần thiết
+        \item Authentication: Header (thường là mặc định)
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection{Ví dụ: Tích hợp với Google Drive}
+
+Workflow:
+\begin{itemize}
+    \item Trigger Node (ví dụ: Webhook)
+    \item Google Drive Node để tải file
+\end{itemize}
+
+Google Drive Node:
+\begin{itemize}
+    \item Operation: Download
+    \item File ID: ID của file trong Google Drive (có thể lấy từ URL)
+\end{itemize}
+
+\subsubsection{Ví dụ: Tích hợp với Salesforce qua OAuth}
+
+Workflow:
+\begin{itemize}
+    \item Cron Node (chạy hàng ngày)
+    \item Salesforce Node để lấy danh sách các khách hàng mới
+    \item Function Node để chuyển đổi dữ liệu
+    \item Send Email Node để gửi báo cáo
+\end{itemize}
+
+Salesforce Node:
+\begin{itemize}
+    \item Operation: SOQL Query
+    \item Query: SELECT Id, Name, Email, Phone, CreatedDate FROM Contact WHERE CreatedDate = TODAY
+\end{itemize}
+
+Function Node: Định dạng dữ liệu để gửi email
+\begin{lstlisting}[language=JavaScript]
+const contacts = items.map(item => item.json);
+
+const emailContent = `
+<h2>New customer (${new Date().toLocaleDateString()})</h2>
+<table border="1" cellpadding="5">
+  <tr>
+    <th>Name</th>
+    <th>Email</th>
+    <th>phone</th>
+  </tr>
+  ${contacts.map(contact => `
+    <tr>
+      <td>${contact.Name}</td>
+      <td>${contact.Email}</td>
+      <td>${contact.Phone || 'N/A'}</td>
+    </tr>
+  `).join('')}
+</table>
+<p>Sum: ${contacts.length} new customer</p>
+`;
+
+return [
+  {
+    json: {
+      to: "your-email@example.com",
+      subject: `report ${new Date().toLocaleDateString()}`,
+      html: emailContent
+    }
+  }
+];
+\end{lstlisting}
+
+\subsection{Làm việc với API sử dụng Token Authentication}
+
+Nhiều API sử dụng token authentication đơn giản hơn OAuth.
+
+\subsubsection{Thiết lập Auth Token credentials}
+
+\begin{enumerate}
+    \item Trong n8n, tạo credentials mới loại "API Key Auth" hoặc "Bearer Token Auth"
+    \item Nhập API key hoặc token từ dịch vụ
+    \item Chọn vị trí chèn token (thường là Header)
+    \item Nếu cần, tùy chỉnh tên trường header (ví dụ: "Authorization" hoặc "X-API-Key")
+\end{enumerate}
+
+\subsubsection{Ví dụ: Tích hợp với GitHub API}
+
+Workflow:
+\begin{itemize}
+    \item Webhook Node (để nhận sự kiện từ ngoài)
+    \item HTTP Request Node để gọi GitHub API
+    \item Function Node để xử lý response
+    \item Send Email Node để thông báo
+\end{itemize}
+
+HTTP Request Node:
+\begin{itemize}
+    \item Method: POST
+    \item URL: https://api.github.com/repos/\{owner\}/\{repo\}/issues
+    \item Authentication: Chọn Bearer Token Auth credentials
+\end{itemize}
+Body:
+\begin{lstlisting}[language=JSON]
+{
+  "title": "Issue ",
+  "body": "Report by webhook",
+  "labels": ["bug", "automated"]
+}
+\end{lstlisting}
+
+\subsubsection{Ví dụ: Refresh Token tự động}
+
+Một số API yêu cầu làm mới token định kỳ. Dưới đây là cách thiết lập workflow để tự động làm mới token:
+
+Workflow:
+\begin{itemize}
+    \item Cron Node (chạy định kỳ, ví dụ: mỗi 50 phút nếu token hết hạn sau 1 giờ)
+    \item HTTP Request Node để làm mới token
+    \item Function Node để lưu token mới
+\end{itemize}
+
+HTTP Request Node:
+\begin{itemize}
+    \item Method: POST
+    \item URL: https://api.service.com/oauth/token
+\end{itemize}
+
+Body:
+\begin{lstlisting}[language=JSON]
+{
+  "grant_type": "refresh_token",
+  "refresh_token": "{{$node["Get Stored Credentials"].json.refresh_token}}",
+  "client_id": "your_client_id",
+  "client_secret": "your_client_secret"
+}
+\end{lstlisting}
+
+Function Node:
+% \begin{lstlisting}[language=JavaScript]
+% // Lưu token mới vào n8n
+% const tokenData = items[0].json;
+
+% // Bạn có thể lưu vào database hoặc sử dụng n8n variables
+% // Hoặc cập nhật credentials
+
+% return [
+%   {
+%     json: {
+%       success: true,
+%       message: "Token đã được làm mới",
+%       expires_at: new Date(Date.now() + tokenData.expires_in * 1000).toISOString()
+%     }
+%   }
+% ];
+% \end{lstlisting}
+
+\subsection{Xây dựng Middleware API với n8n}
+
+n8n có thể được sử dụng như một middleware giữa các API khác nhau, cho phép bạn:
+\begin{itemize}
+    \item Chuyển đổi định dạng dữ liệu
+    \item Kết hợp dữ liệu từ nhiều nguồn
+    \item Thêm xác thực và kiểm soát truy cập
+\end{itemize}
+
+\subsubsection{Ví dụ: Middleware cho CRM và Marketing Automation}
+
+Workflow:
+\begin{itemize}
+    \item Webhook Node (endpoint API của bạn)
+    \item Switch Node để định tuyến request
+    \item HTTP Request Node để gọi API của CRM
+    \item HTTP Request Node khác để gọi API của Marketing Platform
+    \item Function Node để kết hợp kết quả
+    \item Respond to Webhook Node để trả về kết quả
+\end{itemize}
+
+Function Node:
+\begin{lstlisting}[language=JavaScript]
+const crmData = $node["HTTP Request"].json;
+const marketingData = $node["HTTP Request1"].json;
+
+const combinedData = {
+  contact: {
+    id: crmData.id,
+    name: crmData.name,
+    email: crmData.email,
+    phone: crmData.phone
+  },
+  marketing: {
+    campaigns: marketingData.campaigns,
+    lastOpened: marketingData.last_activity,
+    clickRate: marketingData.statistics.click_rate
+  },
+  summary: {
+    totalSpent: crmData.total_purchases,
+    totalEmails: marketingData.statistics.total_emails,
+    engagementScore: (marketingData.statistics.open_rate * 0.4 + 
+                      marketingData.statistics.click_rate * 0.6).toFixed(2)
+  }
+};
+
+return [{ json: combinedData }];
+\end{lstlisting}
+
+\section{Các kỹ thuật xử lý dữ liệu nâng cao}
+
+\subsection{Xử lý dữ liệu batch và pagination}
+
+Khi làm việc với lượng lớn dữ liệu, pagination là kỹ thuật quan trọng:
+
+\begin{lstlisting}[language=JavaScript]
+let allData = [];
+let page = 1;
+let hasMore = true;
+
+while (hasMore) {
+  // call API 
+  const response = await httpRequest({
+    url: `https://api.example.com/items?page=${page}`,
+    headers: { 'Authorization': 'Bearer your_token' }
+  });
+  
+  allData = [...allData, ...response.data.items];
+  
+  hasMore = response.data.has_more;
+  page++;
+  
+  if (page > 100) break;
+}
+
+return [{ json: { items: allData } }];
+\end{lstlisting}
+
+\subsection{Xử lý dữ liệu song song với Wait node}
+
+n8n cho phép xử lý song song nhiều luồng dữ liệu, sau đó kết hợp kết quả:
+
+Workflow:
+\begin{itemize}
+    \item Split In Batches Node để chia nhỏ dữ liệu
+    \item Nhiều nhánh xử lý song song
+    \item Wait Node để đợi tất cả hoàn thành
+    \item Merge Node để kết hợp kết quả
+\end{itemize}
+
+\subsection{Mã hóa và bảo mật dữ liệu}
+Mã hóa dữ liệu nhạy cảm. Thay thế dữ liệu nhạy cảm bằng dữ liệu đã mã hóa
+\begin{lstlisting}[language=JavaScript]
+const crypto = require('crypto');
+
+items = items.map(item => {
+  const key = crypto.scryptSync('password', 'salt', 24);
+  const iv = Buffer.alloc(16, 0);
+  
+  const cipher = crypto.createCipheriv('aes-192-cbc', key, iv);
+  let encrypted = cipher.update(item.json.creditCard, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  
+  item.json.creditCard = encrypted;
+  
+  return item;
+});
+
+return items;
+\end{lstlisting}
+
+\section{Các ví dụ workflow hoàn chỉnh}
+
+\subsection{Workflow 1: Hệ thống theo dõi kho hàng tự động}
+
+\subsubsection{Mục tiêu:} Tự động cập nhật kho hàng từ nhiều nguồn (database, API), gửi thông báo khi sản phẩm sắp hết hàng, và tạo báo cáo hàng tuần.
+
+\subsubsection{Các node chính:}
+\begin{enumerate}
+    \item Cron Node (chạy hàng ngày)
+    \item MySQL Node (lấy dữ liệu kho hàng)
+    \item HTTP Request Node (lấy dữ liệu từ API nhà cung cấp)
+    \item Function Node (kết hợp và phân tích dữ liệu)
+    \item IF Node (kiểm tra sản phẩm sắp hết hàng)
+    \item Send Email Node (gửi cảnh báo)
+    \item Google Sheets Node (lưu dữ liệu cho báo cáo)
+\end{enumerate}
+
+\subsection{Workflow 2: Tích hợp CRM và Marketing Automation}
+
+\subsubsection{Mục tiêu:} Tự động đồng bộ hóa khách hàng giữa CRM và hệ thống email marketing, phân đoạn khách hàng dựa trên hành vi, và tự động gửi email cá nhân hóa.
+
+\subsubsection{Các node chính:}
+\begin{enumerate}
+    \item Webhook Node (kích hoạt khi có khách hàng mới trong CRM)
+    \item HTTP Request Node (lấy chi tiết khách hàng từ CRM API)
+    \item Function Node (xử lý và phân đoạn khách hàng)
+    \item IF Node (định tuyến dựa trên phân đoạn)
+    \item HTTP Request Node 
+\end{enumerate}
+
+\section{Bài tập thực hành}
+
+\begin{enumerate} 
+    \item Viết một Function Node để lọc danh sách sản phẩm, chỉ giữ lại các sản phẩm còn hàng và có giá dưới 500. 
+    \item Tạo workflow đồng bộ dữ liệu từ một API bất kỳ vào cơ sở dữ liệu MySQL với các trường: \texttt{name}, \texttt{price}, \texttt{stock}. \item Viết một workflow tích hợp OAuth với Google Drive để tự động tải về các file mới trong một thư mục và lưu thông tin file vào cơ sở dữ liệu PostgreSQL. 
+\end{enumerate}
+

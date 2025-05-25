@@ -1,0 +1,102 @@
+\documentclass[a4paper,12pt,oneside]{book} 
+
+% package imported
+\input{def}
+
+\usepackage{tabularx}
+\usepackage{fix-cm}
+% Chỉnh khoảng cách giữa các đoạn văn
+\setlength{\parskip}{10pt}
+
+
+% Các gói cần thiết
+\usepackage[utf8]{inputenc} % Để hỗ trợ tiếng Việt
+\usepackage[vietnamese]{babel} % Ngôn ngữ tiếng Việt
+\usepackage{caption}
+\usepackage[top=3cm, bottom=2.5cm, left=2.5cm, right=2cm]{geometry}
+\usepackage{amsmath} % Để soạn thảo công thức toán học
+\usepackage{indentfirst} % Everything is indented, including the first paragraph
+\setlength{\parindent}{0cm} % Indent distance
+\usepackage{pagecolor}
+\usepackage{float}
+
+\usepackage{minted}
+
+\usepackage{listings} %ghi công thức\
+\usepackage{xcolor}
+\lstset{
+    language=JSON,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue},
+    stringstyle=\color{red},
+    numberstyle=\tiny\color{gray},
+    breaklines=true,  % Tự động xuống dòng
+    frame=single,
+    showstringspaces=false
+}
+
+\usepackage{graphicx} % Để chèn hình ảnh
+\usepackage{lipsum}   % Để tạo đoạn văn mẫu
+\renewcommand{\figurename}{Biểu đồ}
+\usepackage{enumitem} %tạo mục list danh sách
+\usepackage{booktabs} % Để tạo bảng đẹp hơn
+\usepackage{hyperref} % Để chèn link URL
+\usepackage{background} % tạo backround
+\definecolor{covercolor}{RGB}{173, 216, 230} % Màu xanh dương
+\backgroundsetup{
+  scale=1,
+  color=black,
+  opacity=0.05, % Độ trong suốt
+  angle=45, % Góc nghiêng
+  position=current page.south,
+  vshift=10cm,
+  hshift=10cm,
+  contents={\includegraphics[width=15cm]{03.png}}
+}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+
+% Header
+\fancyhead[L]{\url{https://haismartlife.com/portfolio/}}
+\fancyhead[R]{HƯỚNG DẪN SỬ DỤNG N8N}
+
+% Footer
+\fancyfoot[C]{\thepage}
+
+% Đặt lại fancyhdr sau mỗi chương
+\usepackage{etoolbox}
+\makeatletter
+\preto{\chapter}{\thispagestyle{fancy}} % Đảm bảo mỗi chương không bị mất header/footer
+\makeatother
+
+%-----------------------------------------
+
+\begin{document}
+\chapter{a}
+\chapter{a}
+\chapter{a}
+\chapter{a}
+\chapter{a}
+\chapter{a}
+\chapter{a}
+
+\setcounter{page}{120}
+
+% % Chương 9
+\include{sections/chap9}
+
+% % % Chương 10
+ \include{sections/chap10}
+
+% % Chương 11
+ % \include{sections/chap11}
+
+% Chương 12
+\include{sections/chap12}
+
+
+
+\end{document}

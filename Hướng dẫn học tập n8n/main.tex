@@ -1,0 +1,344 @@
+\documentclass[a4paper,12pt,oneside]{book} 
+% Load all packages and settings in the preamble 
+\usepackage[utf8]{inputenc}
+
+\input{settings/packages}
+
+\input{settings/def}
+\usepackage{pagecolor}
+\usepackage{xcolor}
+\usepackage{tikz}
+
+\setlength{\parskip}{10pt}
+
+\usepackage[colorlinks=true,
+linkcolor=blue,
+urlcolor=blue,
+citecolor=cyan,
+linktoc=all,        % Cả tiêu đề và số trang có thể nhấn được
+% linktocpage=true,   % Nhấn được cả số trang
+hyperfootnotes=true]{hyperref}
+
+\begin{document}
+
+\let\cleardoublepage\clearpage
+% Load initial settings for the document
+\input{settings/initial}	
+% Cover page
+\input{sections/titlepage}
+% \newpage             
+\tableofcontents
+\thispagestyle{empty}
+% \listoffigures % Danh sách hình vẽ
+\chapter*{Bảng ký hiệu và chữ viết tắt}
+\begin{tabular}
+{@{\hspace{-0.1cm}} l 
+	@{\hspace{1.2cm}}p{11.5cm}l}
+\textbf{API }& \textbf{A}pplication \textbf{P}rogramming \textbf{I}nterface (Giao diện lập trình ứng dụng).\\
+
+\textbf{AWS }& \textbf{A}mazon \textbf{W}eb \textbf{S}ervices (Nền tảng dịch vụ đám mây Amazon).\\
+
+\end{tabular}
+
+\newpage
+\thispagestyle{empty}
+
+\begin{flushright}
+\huge \textbf{Những Người Đóng Góp}
+\end{flushright}
+
+\section*{Về Tác Giả}
+
+\textbf{Vũ Huy (Glutis)}, sinh viên ngành Toán tại Đại học Bách Khoa Hà Nội. Hướng đi chính của cậu ta chưa được định hình rõ ràng, nhưng đam mê học hỏi đã dẫn lối thanh niên ấy khám phá nhiều lĩnh vực khác nhau. Huy luôn tò mò với cách mà dữ liệu, hệ thống và công nghệ vận hành phía sau những quy trình tưởng chừng đơn giản. Đặc biệt yêu thích toán học và trí tuệ nhân tạo, Huy dành nhiều thời gian hơn cho việc nghiên cứu các công cụ tự động hóa, pipeline dữ liệu và cách tối ưu vận hành hệ thống. Với Huy, việc biến những công việc lặp đi lặp lại thành những quy trình gọn gàng, tự động và hiệu quả là một niềm vui thực sự.
+
+% \textit{Có những người đi thật nhanh vì đã biết đích đến, cũng có những người đi chậm rãi vì mải mê ngắm nhìn hai bên đường. Vũ Huy chọn cách thứ hai — không vội vàng, không áp lực, chỉ đơn giản là để mình lớn lên cùng những điều mình yêu thích. Trong hành trình đó, toán học và công nghệ như hai người bạn đồng hành trung thành, cùng cậu chắp nối những mảnh ghép tri thức, mơ về những hệ thống vận hành trơn tru hơn, tự động hơn, và cũng... đẹp đẽ hơn.}
+
+\textit{"Đam mê không phải lúc nào cũng ồn ào. Với Vũ Huy, nó là những buổi tối lặng lẽ đọc tài liệu, những dòng code chỉnh sửa không biết mệt, những thử nghiệm thất bại nhưng đầy hy vọng. Cậu tin rằng: nếu có thể khiến hệ thống tự động vận hành, khiến dữ liệu chảy trôi như mạch ngầm, thì sẽ có thêm thời gian cho những giấc mơ lớn hơn. Một hành trình âm thầm, nhưng đầy ánh sáng".}
+
+\vspace{0.5cm}
+
+\textbf{Tôi - Nguyễn Quốc Hải}, kỹ sư điện-tự động hoá của đại học Bách Khoa TP HCM và có một điểm nổi bật là rất LƯỜI. Chính vì để bản thân ít phải làm việc hơn nên tôi rất hứng thú với công nghệ, AI, đặc biệt những công nghệ có thể giúp tôi được LƯỜI. Tôi tìm hiểu nhiều vấn đề liên quan đến tự động hoá công việc và đa dạng mảng. Mong muốn sẽ chia sẻ được đến các bạn một giá trị nào đó, Đặc biệt là các bạn lười giống mình! :v 
+
+\textit{"Tôi muốn gửi lời cảm ơn đến đồng tác giả của tôi, Vũ Huy, và toàn bộ cộng đồng đã hỗ trợ tôi trong quá trình thực hiện cuốn sách này. Cảm ơn em Huy đã đóng góp và dành rất nhiều tâm huyết cho cuốn sách này. Dĩ nhiên cuốn sách còn rất nhiều thiếu sót và cần bổ sung, nhưng mong mọi người sẽ đón nhận đứa con tinh thần của nhóm! cảm ơn các bạn! "}
+
+
+\newpage
+\thispagestyle{empty}
+
+\noindent\vspace{5cm}
+
+\begin{center}
+\textit{ \textcolor{red}{Hào nhoáng phai mờ, bình yên còn mãi.}\\
+	Chúng ta thường đánh mất thời gian để theo đuổi những điều phù phiếm, rồi lại tiếc nuối những khoảnh khắc giản dị mà mình từng bỏ lỡ. Cuộc sống là chuỗi những lựa chọn – và mỗi lựa chọn đều định hình nên tương lai. Hãy chọn điều khiến bạn thấy nhẹ lòng, không phải chỉ khiến bạn được ngợi khen.}
+
+\vspace{0.5cm}
+\hspace{10cm}
+- - Quốc Hải 
+\end{center}
+
+\vspace{2cm}
+
+\begin{center}
+\textit{\textcolor{red}{Do your best, the rest will come!}\\
+	Luôn làm tốt những gì được giao, bởi thành công không đến từ sự vội vã mà từ sự kiên trì và nỗ lực không ngừng. Khi được giao trọng trách, hãy cân nhắc kỹ lưỡng, giữ vững tinh thần và quyết tâm đến cùng. Đứng trên vai những người khổng lồ luôn dễ dàng hơn, nhưng chính đôi chân bạn mới là nền tảng để vươn xa :):)}
+
+\vspace{0.5cm}
+\hspace{10cm}
+- - Vũ Huy
+\end{center}
+
+% \newpage
+
+%----------------------------------------
+% Lời nói đầu
+\chapter*{Lời Nói Đầu}
+\addcontentsline{toc}{chapter}{\bfseries Mở đầu}
+\fontsize{13pt}{16pt}\selectfont
+\begin{center}
+\textit{\textcolor{red}{\textbf{Tự Động Hóa – Giấc Mơ Về Một Thế Giới Hiệu Quả}}}
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}[yscale=-1]
+	\begin{scope}
+		\path[fill=caf6328] (.0,4.40) -- (.0,4.08).. controls (.0,3.99163) and (.7163,3.92).. (.16,3.92) -- (4.96,3.92).. controls (5.04837,3.92) and (5.12,3.99163).. (5.12,4.08) -- (5.12,4.40).. controls (5.12,4.48837) and (5.04837,4.56).. (4.96,4.56) -- (.16,4.56).. controls (.7163,4.56) and (.0,4.48837).. (.0,4.40) -- cycle;
+		\path[fill=ca25425] (4.96,4.24) -- (4.96,4.32).. controls (4.96,4.36418) and (4.92418,4.40).. (4.88,4.40) -- (.32,4.40).. controls (.23163,4.40) and (.16,4.47163).. (.16,4.56) -- (.16,4.56) -- (2.48,4.56) -- (3.92,4.56) -- (4.96,4.56).. controls (5.04837,4.56) and (5.12,4.48837).. (5.12,4.40) -- (5.12,4.08) -- (5.12,4.08).. controls (5.03163,4.08) and (4.96,4.15163).. (4.96,4.24) -- cycle;
+		\path[fill=c3cb44a] (1.60,3.92) -- (.64,3.92) -- (.64,1.44).. controls (.64,1.39582) and (.67582,1.36).. (.72,1.36) -- (1.52,1.36).. controls (1.56418,1.36) and (1.60,1.39582).. (1.60,1.44) -- cycle;
+		\path[fill=c4c9bd5] (4.48,3.92) -- (3.52,3.92) -- (3.52,1.44).. controls (3.52,1.39582) and (3.55582,1.36).. (3.60,1.36) -- (4.40,1.36).. controls (4.44418,1.36) and (4.48,1.39582).. (4.48,1.44) -- cycle;
+		\path[fill=ced2c39] (2.56,3.92) -- (1.60,3.92) -- (1.60,.64).. controls (1.60,.59582) and (1.63582,.56).. (1.68,.56) -- (2.48,.56).. controls (2.52418,.56) and (2.56,.59582).. (2.56,.64) -- cycle;
+		\path[fill=cffcf68] (3.52,3.92) -- (2.56,3.92) -- (2.56,.96).. controls (2.56,.91582) and (2.59582,.88).. (2.64,.88) -- (3.44,.88).. controls (3.48418,.88) and (3.52,.91582).. (3.52,.96) -- cycle;
+		\path[fill=ccb202c] (1.76,3.76) -- (2.32,3.76).. controls (2.36418,3.76) and (2.40,3.72418).. (2.40,3.68) -- (2.40,.80).. controls (2.40,.71163) and (2.47163,.64).. (2.56,.64) -- (2.56,.64) -- (2.56,1.28) -- (2.56,2.72) -- (2.56,3.92) -- (1.60,3.92) -- (1.60,3.92).. controls (1.60,3.83163) and (1.67163,3.76).. (1.76,3.76) -- cycle;
+		\path[fill=cf5b445] (2.72,3.76) -- (3.28,3.76).. controls (3.32418,3.76) and (3.36,3.72418).. (3.36,3.68) -- (3.36,1.12).. controls (3.36,1.03163) and (3.43163,.96).. (3.52,.96) -- (3.52,.96) -- (3.52,1.60) -- (3.52,2.72) -- (3.52,3.92) -- (2.56,3.92) -- (2.56,3.92).. controls (2.56,3.83163) and (2.63163,3.76).. (2.72,3.76) -- cycle;
+		\path[fill=c3688c8] (3.68,3.76) -- (4.24,3.76).. controls (4.28418,3.76) and (4.32,3.72418).. (4.32,3.68) -- (4.32,1.60).. controls (4.32,1.51163) and (4.39163,1.44).. (4.48,1.44) -- (4.48,1.44) -- (4.48,2.08) -- (4.48,2.72) -- (4.48,3.92) -- (3.52,3.92) -- (3.52,3.92).. controls (3.52,3.83163) and (3.59163,3.76).. (3.68,3.76) -- cycle;
+		\path[fill=c0e9247] (.80,3.76) -- (1.36,3.76).. controls (1.4418,3.76) and (1.44,3.72418).. (1.44,3.68) -- (1.44,1.60).. controls (1.44,1.51163) and (1.51163,1.44).. (1.60,1.44) -- (1.60,1.44) -- (1.60,2.08) -- (1.60,2.72) -- (1.60,3.92) -- (.64,3.92) -- (.64,3.92).. controls (.64,3.83163) and (.71163,3.76).. (.80,3.76) -- cycle;
+		\path[fill=cb52025,rounded corners=0cm] (1.60,1.04) rectangle (2.56,1.12);
+		\path[fill=cb52025,rounded corners=0cm] (1.60,1.20) rectangle (2.56,1.28);
+		\path[fill=c04803d,rounded corners=0cm] (.64,1.68) rectangle (1.60,1.76);
+		\path[fill=c04803d,rounded corners=0cm] (.64,1.84) rectangle (1.60,1.92);
+		\path[fill=c04803d,rounded corners=0cm] (.64,3.36) rectangle (1.60,3.44);
+		\path[fill=c04803d,rounded corners=0cm] (.64,3.52) rectangle (1.60,3.60);
+		\path[fill=c0261a4,rounded corners=0cm] (3.52,1.68) rectangle (4.48,1.76);
+		\path[fill=c0261a4,rounded corners=0cm] (3.52,1.84) rectangle (4.48,1.92);
+		\path[fill=c0261a4,rounded corners=0cm] (3.52,3.36) rectangle (4.48,3.44);
+		\path[fill=c0261a4,rounded corners=0cm] (3.52,3.52) rectangle (4.48,3.60);
+		\path[fill=cf09820,rounded corners=0cm] (2.56,1.20) rectangle (3.52,1.28);
+		\path[fill=cf09820,rounded corners=0cm] (2.56,1.36) rectangle (3.52,1.44);
+		\path[fill=cf09820,rounded corners=0cm] (2.56,3.36) rectangle (3.52,3.44);
+		\path[fill=cf09820,rounded corners=0cm] (2.56,3.52) rectangle (3.52,3.60);
+		\path[fill=cb52025,rounded corners=0cm] (1.60,3.28) rectangle (2.56,3.36);
+		\path[fill=cb52025,rounded corners=0cm] (1.60,3.44) rectangle (2.56,3.52);
+		\path[fill=ce2e4e6] (2.15,2.88) -- (2.01,2.88).. controls (2.0448,2.88) and (2.00,2.87552).. (2.00,2.87) -- (2.00,1.61).. controls (2.00,1.6448) and (2.0448,1.60).. (2.01,1.60) -- (2.15,1.60).. controls (2.15552,1.60) and (2.16,1.6448).. (2.16,1.61) -- (2.16,2.87).. controls (2.16,2.87552) and (2.15552,2.88).. (2.15,2.88) -- cycle;
+		\path[fill=cf09820] (3.11,2.80) -- (2.97,2.80).. controls (2.96448,2.80) and (2.96,2.79552).. (2.96,2.79) -- (2.96,1.93).. controls (2.96,1.92448) and (2.96448,1.92).. (2.97,1.92) -- (3.11,1.92).. controls (3.11552,1.92) and (3.12,1.92448).. (3.12,1.93) -- (3.12,2.79).. controls (3.12,2.79552) and (3.11552,2.80).. (3.11,2.80) -- cycle;
+		\path[fill=ce2e4e6] (1.19,3.04) -- (1.05,3.04).. controls (1.04448,3.04) and (1.04,3.03552).. (1.04,3.03) -- (1.04,2.49).. controls (1.04,2.48448) and (1.04448,2.48).. (1.05,2.48) -- (1.19,2.48).. controls (1.19552,2.48) and (1.20,2.48448).. (1.20,2.49) -- (1.20,3.03).. controls (1.20,3.03552) and (1.19552,3.04).. (1.19,3.04) -- cycle;
+		\path[fill=c0261a4] (4.07,3.12) -- (3.93,3.12).. controls (3.92448,3.12) and (3.92,3.11552).. (3.92,3.11) -- (3.92,2.57).. controls (3.92,2.56448) and (3.92448,2.56).. (3.93,2.56) -- (4.07,2.56).. controls (4.07552,2.56) and (4.08,2.56448).. (4.08,2.57) -- (4.08,3.11).. controls (4.08,3.11552) and (4.07552,3.12).. (4.07,3.12) -- cycle;
+		\path[fill=ce2e4e6] (1.19,2.40) -- (1.05,2.40).. controls (1.04448,2.40) and (1.04,2.39552).. (1.04,2.39) -- (1.04,2.17).. controls (1.04,2.16448) and (1.04448,2.16).. (1.05,2.16) -- (1.19,2.16).. controls (1.19552,2.16) and (1.20,2.16448).. (1.20,2.17) -- (1.20,2.39).. controls (1.20,2.39552) and (1.19552,2.40).. (1.19,2.40) -- cycle;
+		\path[fill=c0261a4] (4.00,2.40) circle (.02258cm);
+	\end{scope}
+	\path (2.75,4.2) node[font=\sffamily\bfseries\color{yellow}]{Automation};
+\end{tikzpicture}
+\end{center}
+
+
+% Hãy tưởng tượng một buổi sáng bạn thức dậy, mọi thứ đã vận hành trơn tru, không hối hả, không vội vàng: email cập nhật tin tức công nghệ được AI chọn lọc sẵn, bài đăng trên mạng xã hội tự động lên lịch, một bản tóm tắt công việc quan trọng chờ sẵn trong hộp thư. Bạn không cần tất bật xử lý từng việc nhỏ—tất cả đã được tự động hóa từ hôm trước.\\
+Tưởng tượng một buổi sáng thức giấc trong sự bình yên hoàn hảo: không hối hả, không vội vàng. Điện thoại của bạn đã lặng lẽ làm việc suốt đêm - bản tin công nghệ được AI lựa chọn theo đúng sở thích cá nhân đã nằm gọn trong hộp thư, những bài đăng xã hội đã tự động xuất hiện đúng thời điểm vàng, và một bản tóm tắt tinh gọn về các công việc ưu tiên trong ngày đã sẵn sàng chờ đợi. Không còn cảnh tay chân vội vã, tâm trí rối bời - mọi tác vụ nhỏ nhặt đều đã được sắp xếp và thực thi từ trước đó.
+
+Đó chính là sức mạnh của n8n - không đơn thuần là một công cụ, mà là chiếc chìa khóa mở ra một thế giới nơi công nghệ trở thành người đồng hành thầm lặng, gánh vác những nhiệm vụ lặp đi lặp lại để con người được tự do theo đuổi những điều thực sự quan trọng. Xuyên suốt dòng chảy lịch sử, nhiều người vẫn quan niệm rằng giá trị lao động được đo bằng mồ hôi và những giờ miệt mài không ngơi nghỉ. 
+Nhưng trong kỷ nguyên số, lao động đích thực nên là những ý tưởng bứt phá, là những khoảnh khắc mà ta dùng trí tuệ thay vì lặp đi lặp lại những tác vụ nhàm chán. Biến các tác vụ được lặp lại trong cuộc sống đều được tự động một cách hoàn hảo.
+
+Lần đầu tiên sử dụng n8n, tôi ngỡ ngàng khi thấy nó biến một quy trình phức tạp thành workflow mượt mà chỉ trong vài phút. Từ đó, tôi nhận ra rằng ai cũng có thể làm chủ tự động hóa—không cần biết lập trình, chỉ cần tư duy sáng tạo. Cuốn sách này sẽ đồng hành cùng bạn từ những bước đầu tiên đến những ứng dụng mạnh mẽ, thậm chí là tích hợp AI để tạo ra trợ lý ảo của riêng bạn.
+
+\newpage
+\thispagestyle{empty}
+
+\section*{Cuốn sách này dành cho ai?}
+\begin{center}
+
+\begin{tikzpicture}[scale = 0.3,rotate = 45, line join = round]
+	\def\r{2}
+	\foreach \i/\mau in {0/red, 1/blue,2/orange,3/cyan,4/teal,5/brown}
+	\draw[gray, fill = \mau!50, rotate =\i*60,ultra thin]
+	(180:\r)--++(60:3*\r)--++(0:\r)--++(120:2*\r)--++(-120:4*\r)--cycle
+	(0:\r)++(60:\r)--++(0:\r)--++(-60:3*\r)--++(-120:\r)--cycle;
+\end{tikzpicture}
+\end{center}
+
+\addcontentsline{toc}{section}{Cuốn sách này dành cho ai}
+Bạn có thường cảm thấy thời gian quý báu của mình bị nuốt chửng bởi những công việc lặp đi lặp lại, những tác vụ tẻ nhạt ngày này qua ngày khác mà không mang lại giá trị sáng tạo thực sự? Hay bạn là người luôn khát khao khám phá những công nghệ mới, những giải pháp thông minh có thể biến đổi hoàn toàn cách bạn làm việc và sống? Có lẽ bạn chỉ đơn giản yêu thích sự tối giản - mong muốn một thế giới nơi mọi thứ vận hành trơn tru mà không đòi hỏi sự can thiệp liên tục của con người?
+
+Nếu bạn nhận ra mình trong bất kỳ mô tả nào trên đây, cuốn sách này được viết dành riêng cho bạn.
+Chúng tôi không chỉ hướng đến những lập trình viên chuyên nghiệp hay chuyên gia công nghệ sâu sắc - mà còn chào đón tất cả những người khao khát tự động hóa cuộc sống của mình. Từ những người mới làm quen với khái niệm n8n lần đầu tiên, đến những người đã thành thạo nhưng muốn khai phá trọn vẹn tiềm năng ẩn giấu của công cụ đầy quyền năng này.
+
+Dù bạn là freelancer đang tìm cách tối ưu quy trình làm việc, chủ doanh nghiệp nhỏ khao khát giải phóng thời gian cho những điều quan trọng hơn, hay đơn thuần là người đam mê công nghệ luôn háo hức với những khả năng mới - cuốn sách này sẽ trở thành người đồng hành đáng tin cậy trên hành trình khám phá của bạn.
+
+Tất cả những gì bạn cần là một tâm trí tò mò, một chút kiên nhẫn, và khát vọng làm chủ công nghệ để biến những ý tưởng táo bạo nhất thành hiện thực sống động.
+
+Cuốn sách này được viết dành cho những người mới bắt đầu khám phá lĩnh vực tự động hóa workflow, nhưng cũng mang lại giá trị to lớn cho các nhà phát triển, chuyên gia marketing, nhà phân tích kinh doanh, người đam mê AI, các nhóm kỹ thuật, và bất kỳ ai đang tìm kiếm một giải pháp mạnh mẽ và linh hoạt hơn so với các nền tảng như Zapier hay Make. Dù mục tiêu của bạn là tự động hóa các công việc cá nhân hay xây dựng những quy trình phức tạp trong doanh nghiệp, cuốn sách sẽ cung cấp cho bạn nền tảng vững chắc và kiến thức chuyên sâu cần thiết để hiện thực hóa điều đó.
+
+\newpage
+\thispagestyle{empty}
+
+\section*{Cuốn sách này bao gồm những gì?}
+\addcontentsline{toc}{section}{Cuốn sách này bao gồm những gì}  
+\begin{center}
+
+\begin{tikzpicture}[scale=1, line join=bevel]
+	\pgfmathsetmacro{\a}{2.5}
+	\pgfmathsetmacro{\b}{0.9}
+	
+	\tikzset{%
+		apply style/.code     = {\tikzset{#1}},
+		triangle_edges/.style = {thick,draw=black}
+	}
+	
+	\foreach \theta/\facestyle in {%
+		0/{triangle_edges, fill = gray!50},
+		120/{triangle_edges, fill = gray!25},
+		240/{triangle_edges, fill = gray!90}%
+	}{
+		\begin{scope}[rotate=\theta]
+			\draw[apply style/.expand once=\facestyle]
+			({-sqrt(3)/2*\a},{-0.5*\a})                     --
+			++(-\b,0)                                       --
+			({0.5*\b},{\a+3*sqrt(3)/2*\b})                -- % higher point	
+			({sqrt(3)/2*\a+2.5*\b},{-.5*\a-sqrt(3)/2*\b}) -- % rightmost point
+			++({-.5*\b},-{sqrt(3)/2*\b})                    -- % lower point
+			({0.5*\b},{\a+sqrt(3)/2*\b})                  --
+			cycle;
+		\end{scope}
+	}	
+\end{tikzpicture}
+\end{center}
+
+Hành trình khám phá n8n trong cuốn sách này không chỉ là một bản hướng dẫn thông thường - mà là một bản đồ chinh phục toàn diện về công cụ tự động hóa đang tạo nên làn sóng cách mạng trong cộng đồng công nghệ toàn cầu. Với sự phát triển bùng nổ của cộng đồng người dùng, n8n đã vượt qua giới hạn của một phần mềm đơn thuần để trở thành một hệ sinh thái mạnh mẽ, nơi mọi khả năng kết nối và tự động hóa đều trong tầm tay của bạn.
+
+Cuốn sách mở đầu bằng việc khám phá những nền móng vững chắc của n8n, từng bước giải mã các khái niệm cốt lõi và triết lý thiết kế đứng sau công cụ đầy tiềm năng này. Nhưng điều làm nên linh hồn của cuốn sách chính là những ví dụ thực tế sinh động - những dự án và workflow được mô tả chi tiết với hình ảnh minh họa rõ ràng, từ những tác vụ đơn giản như tự động hóa email hàng ngày đến những quy trình phức tạp tích hợp nhiều nền tảng như Slack, Google Sheets và các hệ thống doanh nghiệp.
+
+Mỗi chương sách không chỉ là kiến thức lý thuyết khô khan mà là một hành trình khám phá thực tiễn, nơi bạn có thể áp dụng ngay lập tức những gì học được vào công việc và cuộc sống. Cấu trúc tiến bộ dần của sách đảm bảo rằng dù bạn là người mới bắt đầu hay đã có kinh nghiệm, bạn đều tìm thấy giá trị phù hợp với trình độ của mình.
+
+Vượt xa khỏi một cuốn cẩm nang kỹ thuật thông thường, cuốn sách này còn là nguồn cảm hứng cho sự sáng tạo không giới hạn. Qua từng trang sách, bạn sẽ dần nhận ra rằng n8n không đơn thuần là một công cụ tự động hóa - mà là chiếc đũa thần kỹ thuật số, nơi những ý tưởng táo bạo nhất của bạn có thể trở thành hiện thực chỉ với vài thao tác đơn giản, mở ra một thế giới nơi thời gian và sáng tạo đều thuộc về bạn.
+
+\newpage
+\thispagestyle{empty}
+
+\section*{Làm sao để tận dụng tối đa quyển sách này?}
+\addcontentsline{toc}{section}{Làm sao để tận dụng tối đa quyển sách này}
+
+\begin{center}
+\definecolor{cA25425}{RGB}{162,84,37}
+\definecolor{cCB202C}{RGB}{203,32,44}
+\definecolor{cAF6328}{RGB}{175,99,40}
+\definecolor{cE2E4E6}{RGB}{226,228,230}
+\definecolor{c35495C}{RGB}{53,73,92}
+\definecolor{c113247}{RGB}{17,50,71}
+\definecolor{c3B5366}{RGB}{59,83,102}
+\definecolor{cC9D1D7}{RGB}{201,209,215}
+\definecolor{cF6B74E}{RGB}{246,183,78}
+\definecolor{cED2C39}{RGB}{237,44,57}
+\begin{tikzpicture}[x=5pt,y=-5pt]
+	\path[fill=cA25425] (6.0235,30.4) -- (5.8353,33.6) -- (33.6,33.6) -- (33.6,30.4) -- cycle;
+	\path[fill=cCB202C,rounded corners=0cm] (33.6,36.8) rectangle (48,38.4);
+	\path[fill=cCB202C,rounded corners=0cm] (33.6,25.6) rectangle (48,27.2);
+	\path[fill=cA25425] (3.2,27.2) -- (6.2117,27.2) -- (6.359,25.6) -- (3.2,25.6) -- cycle;
+	\path[fill=cAF6328] (51.2,24.8).. controls (51.2,25.24) and (50.84,25.6).. (50.4,25.6) -- (.8,25.6).. controls (.36,25.6) and (0,25.24).. (0,24.8) -- (0,23.2).. controls (0,22.76) and (.36,22.4).. (.8,22.4) -- (50.4,22.4).. controls (50.84,22.4) and (51.2,22.76).. (51.2,23.2) -- (51.2,24.8) -- cycle;
+	\path[fill=cE2E4E6] (13.6,14.4) -- (13.6,16.8).. controls (13.6,17.681) and (14.3199,18.4).. (15.2,18.4) -- (37.6,18.4).. controls (38.481,18.4) and (39.2,17.681).. (39.2,16.8) -- (39.2,14.4) -- (13.6,14.4) -- cycle;
+	\path[fill=c35495C] (26.4,16.4) circle (.02258cm);
+	\path[fill=c113247] (37.6,.8).. controls (38.041,.8) and (38.4,1.159).. (38.4,1.6) -- (38.4,13.6) -- (14.4,13.6) -- (14.4,1.6).. controls (14.4,1.159) and (14.7588,.8).. (15.2,.8) -- (37.6,.8)(37.6,.0) -- (15.2,.0).. controls (14.3199,.0) and (13.6,.7199).. (13.6,1.6) -- (13.6,14.4) -- (39.2,14.4) -- (39.2,1.6).. controls (39.2,.7199) and (38.481,.0).. (37.6,.0) -- (37.6,.0) -- cycle;
+	\path[fill=c35495C] (38.4,1.6).. controls (38.4,1.159) and (38.041,.8).. (37.6,.8) -- (15.2,.8).. controls (14.7588,.8) and (14.4,1.159).. (14.4,1.6) -- (14.4,13.6) -- (38.4,13.6) -- (38.4,1.6) -- cycle;
+	\path[fill=c3B5366] (37.6,.8) -- (26.6445,.8) -- (30.5554,13.6) -- (38.4,13.6) -- (38.4,1.6).. controls (38.4,1.159) and (38.041,.8).. (37.6,.8) -- cycle;
+	\path[fill=c35495C] (37.6,.0) -- (26.4,.0) -- (26.6445,.8) -- (37.6,.8).. controls (38.041,.8) and (38.4,1.159).. (38.4,1.6) -- (38.4,13.6) -- (30.5554,13.6) -- (30.8,14.4) -- (39.2,14.4) -- (39.2,1.6).. controls (39.2,.7199) and (38.481,.0).. (37.6,.0) -- cycle;
+	\path[fill=cC9D1D7] (29.6,21.6) -- (23.2,21.6) -- (24,18.4) -- (28.8,18.4) -- cycle;
+	\path[fill=cF6B74E,rounded corners=0cm] (37.6,28.0) rectangle (44,29.6);
+	\path[fill=cCB202C,rounded corners=0cm] (37.6,29.6) rectangle (44,30.4);
+	\path[fill=cF6B74E,rounded corners=0cm] (37.6,40.8) rectangle (44,42.4);
+	\path[fill=cCB202C,rounded corners=0cm] (37.6,42.4) rectangle (44,43.2);
+	\path[fill=cAF6328] (3.2,27.2) -- (3.2,50.4).. controls (3.2,50.84) and (3.56,51.2).. (4,51.2).. controls (4.44,51.2) and (4.8211,50.846).. (4.8469,50.414) -- (6.2118,27.2) -- (3.2,27.2) -- cycle;
+	\path[fill=cED2C39] (33.6,38.4) -- (33.6,50.4).. controls (33.6,50.84) and (33.96,51.2).. (34.4,51.2) -- (47.2,51.2).. controls (47.64,51.2) and (48,50.84).. (48,50.4) -- (48,38.4) -- (33.6,38.4) -- cycle(44,43.2) -- (37.6,43.2) -- (37.6,40.8) -- (44,40.8) -- (44,43.2) -- cycle;
+	\path[fill=cED2C39] (33.6,27.2) -- (33.6,36.8) -- (48,36.8) -- (48,27.2) -- (33.6,27.2) -- cycle(44,30.4) -- (37.6,30.4) -- (37.6,28.0) -- (44,28.0) -- (44,30.4) -- cycle;
+	\path[fill=cE2E4E6,rounded corners=0cm] (21.6,21.6) rectangle (31.2,22.4);
+	\path (27.25,7.25) node[font=\Large\bfseries\color{gray}\sffamily] {Automation};
+	\path (27,7) node[font=\Large\bfseries\color{yellow}\sffamily] {Automation};
+\end{tikzpicture}
+\end{center}
+
+Để thực sự khai thác hết giá trị của cuốn sách này, bạn cần nhiều hơn là việc chỉ lật từng trang và đọc qua loa. Hãy biến nó thành một trải nghiệm thực sự – một cuộc phiêu lưu nơi bạn vừa học vừa làm. Trước tiên, hãy chuẩn bị một tinh thần cởi mở và sẵn sàng thử nghiệm. Đừng ngại mắc sai lầm, bởi chính những lần thử sai sẽ giúp bạn hiểu sâu hơn về cách n8n hoạt động. Một chiếc máy tính, một kết nối internet ổn định và một không gian yên tĩnh sẽ là những người bạn đồng hành lý tưởng trong hành trình này.
+
+Mỗi chương trong sách đều được thiết kế để bạn có thể thực hành ngay lập tức. Khi đọc về một workflow, hãy dành thời gian để tự tay xây dựng nó, điều chỉnh nó theo nhu cầu cá nhân của bạn. Ghi chú lại những ý tưởng bất chợt nảy ra trong đầu – có thể là một cách kết nối ứng dụng mới, một quy trình bạn muốn tối ưu, hay thậm chí là một dự án lớn hơn mà bạn chưa từng nghĩ tới trước đây. Càng thực hành nhiều, bạn càng nhận ra rằng n8n không chỉ giúp bạn tiết kiệm thời gian, mà còn mở ra một cách tư duy mới về công việc và hiệu suất.
+
+Ngoài ra, đừng ngần ngại đặt câu hỏi hoặc tìm kiếm thêm thông tin từ cộng đồng n8n – một cộng đồng sôi động và luôn sẵn sàng hỗ trợ. Hãy xem cuốn sách này như một người thầy, nhưng cũng là một người bạn khơi gợi sự sáng tạo trong bạn. Khi bạn kết hợp giữa việc đọc, thực hành và khám phá, bạn sẽ không chỉ làm chủ n8n, mà còn làm chủ chính khả năng của mình trong thế giới công nghệ không ngừng thay đổi.
+
+
+\newpage
+\thispagestyle{empty}
+
+\section*{Tải xuống tài nguyên nhắc tới trong sách!}
+\addcontentsline{toc}{section}{Tải xuống tài nguyên nhắc tới trong sách}
+
+\tdplotsetmaincoords{60}{125}
+\begin{center}
+
+\begin{tikzpicture}[tdplot_main_coords,scale=3]
+	% Định nghĩa màu sắc đẹp nhưng đơn giản
+	\definecolor{skyblue}{RGB}{100,180,255}
+	\definecolor{lightpink}{RGB}{255,180,220}
+	
+	% Tạo một lập phương
+	\coordinate (A1) at (0,0,0);
+	\coordinate (A2) at (1,0,0);
+	\coordinate (A3) at (1,1,0);
+	\coordinate (A4) at (0,1,0);
+	\coordinate (B1) at (0,0,1);
+	\coordinate (B2) at (1,0,1);
+	\coordinate (B3) at (1,1,1);
+	\coordinate (B4) at (0,1,1);
+	
+	% Vẽ các mặt phía sau (không nhìn thấy trực tiếp)
+	\draw[fill=skyblue!50, opacity=0.5] (A1) -- (A2) -- (A3) -- (A4) -- cycle;
+	\draw[fill=skyblue!60, opacity=0.5] (A1) -- (A2) -- (B2) -- (B1) -- cycle;
+	\draw[fill=skyblue!70, opacity=0.5] (A1) -- (A4) -- (B4) -- (B1) -- cycle;
+	
+	% Vẽ các mặt phía trước (nhìn thấy trực tiếp)
+	\draw[fill=lightpink!60, opacity=0.8] (B1) -- (B2) -- (B3) -- (B4) -- cycle;
+	\draw[fill=lightpink!70, opacity=0.8] (A2) -- (A3) -- (B3) -- (B2) -- cycle;
+	\draw[fill=lightpink!80, opacity=0.8] (A3) -- (A4) -- (B4) -- (B3) -- cycle;
+	
+	% Thêm điểm sáng đơn giản ở các góc
+	\foreach \i in {A1,A2,A3,A4,B1,B2,B3,B4} {
+		\fill[white] (\i) circle (0.03);
+	}
+\end{tikzpicture}
+\end{center}
+
+
+Để hành trình học tập và ứng dụng n8n của bạn trở nên trọn vẹn hơn, chúng tôi đã chuẩn bị sẵn một bộ sưu tập tài nguyên phong phú được nhắc đến xuyên suốt cuốn sách. Từ các tệp mã nguồn mẫu, workflow đã được xây dựng sẵn, đến các hướng dẫn bổ sung dưới dạng video hoặc tài liệu chi tiết – tất cả đều có thể được tải xuống chỉ với vài thao tác đơn giản. Bạn chỉ cần truy cập link sau \href{https://haismartlife.com}{https://haismartlife.com} để sở hữu ngay những công cụ hỗ trợ này.
+
+Những tài nguyên này không chỉ giúp bạn tiết kiệm thời gian trong việc thiết lập các dự án ban đầu, mà còn là nguồn cảm hứng để bạn tùy chỉnh và phát triển theo cách riêng. Hãy nghĩ về chúng như những viên gạch đầu tiên trong hành trình xây dựng “tòa nhà tự động hóa” của riêng bạn. Dù bạn là người thích làm việc một mình hay muốn chia sẻ thành quả với cộng đồng, những tài nguyên này sẽ là cầu nối giúp bạn tiến xa hơn trên con đường chinh phục n8n.
+
+Bạn đã sẵn sàng biến công việc thành trải nghiệm thông minh hơn chưa? Hãy mở trang sách và cùng tôi bắt đầu hành trình này!
+
+% Sections
+\input{sections/chap1}
+\clearpage
+\input{sections/chap2}
+\clearpage
+\input{sections/chap3}
+\clearpage
+\input{sections/chap4}
+\clearpage
+\input{sections/chap5}
+\clearpage
+\input{sections/chap7}
+\clearpage
+\input{sections/chap8}
+\clearpage
+\input{sections/chap9}
+\clearpage
+\input{sections/chap10}
+\clearpage
+\input{sections/chap12}
+\clearpage
+\input{sections/ref}
+
+    
+\newpage
+\printbibliography[heading=bibintoc]
+\end{document}

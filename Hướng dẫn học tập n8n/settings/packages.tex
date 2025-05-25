@@ -1,0 +1,215 @@
+% *** LANGUAGE PACKAGES ***
+\usepackage[utf8]{vietnam}   
+\usepackage[vietnamese]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}		% Great font
+\renewcommand*\familydefault{\sfdefault}
+\usepackage[useregional]{datetime2}		% To use several date formats
+\usepackage{fontawesome}
+\usepackage{booktabs}
+% \usepackage{tocbibind} % gói tài liệu tham khảo
+\usepackage{enumitem}
+
+\usepackage{lipsum}		% For dummy text
+\usepackage{indentfirst}
+\setlength\parindent{0pt}
+
+\usepackage{caption}
+\usepackage{tikz}
+\usepackage{fontawesome}
+% \usepackage{hyperref}
+
+% *** GEOMETRY PACKAGES ***
+\usepackage[top=3cm, bottom=2.5cm, left=2.5cm, right=2cm]{geometry}
+\usepackage{lastpage}
+
+% *** COLOR PACKAGES ***
+% \usepackage[table]{xcolor}		% "table" for table rowcolors
+\usepackage{xcolor}
+\definecolor{blue}{RGB}{0,89,140}
+\definecolor{gray}{RGB}{242,242,242}
+\definecolor{grayblack}{RGB}{50,50,50}
+\definecolor{blue2}{RGB}{10,62,157}
+\definecolor{red2}{RGB}{173,17,0}
+\definecolor{gray2}{RGB}{230,230,230}
+
+% *** HEADING AND FOOTER ***
+\usepackage{fancyhdr} % For heading and footers
+\renewcommand{\headrulewidth}{0.5pt}
+\let\oldheadrule\headrule% Copy \headrule into \oldheadrule
+\renewcommand{\headrule}{\color{blue}\oldheadrule}% Add colour to \headrule
+% \renewcommand{\footrulewidth}{0.5pt} 
+\let\oldfootrule\footrule%
+\renewcommand{\footrule}{\color{blue}\oldfootrule}% Add colour to \headrule
+\pagestyle{fancy} 
+
+% Default page style
+% \cfoot{}                             % Empty foot center  
+\lhead{\includegraphics[width=0.18\textwidth]{glutis.png}} 
+%\lhead{\href{https://haismartlife.com/portfolio/}{Haismartlife}} 
+
+\chead{\textcolor{grayblack}{\author}}
+\rhead{\textcolor{grayblack}{\leftmark}}
+%\fancyhead[R]{\leftmark}
+% \lfoot{\textcolor{grayblack}{\small \title}}        
+% \rfoot{\textcolor{grayblack}{\small Trang. \thepage\ - \pageref*{LastPage}}} 			     % Total of pages
+
+% *** GRAPHICS RELATED PACKAGES ***
+\usepackage{graphicx}       % Loading images
+\usepackage{float}          % Figures inside minipages
+\usepackage{wrapfig}		% Text wrapped around figure
+\usepackage{tikz}			% Used to load cover figure
+\usepackage[hypcap,font={color=grayblack}]{caption} % used to style the captions
+\usepackage{subcaption} 	% For subfigures
+\usepackage{overpic}		% To add text over figures
+\graphicspath{{././figures/}}  % Figures relative directory
+
+% *** TITLE PACKAGES ***
+\usepackage{titlesec}
+\titleformat{\section}{\color{blue}\normalfont\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\color{blue}\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\usepackage{setspace} % Para ajustar la separación entre líneas del documento
+
+% *** TABLE PACKAGES ***
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{footnote} % To have footnotes inside tables
+\usepackage{array}
+
+\usepackage{xurl} % Lo cargo antes de hyperref, porque ese ya lo carga también.
+\urlstyle{sf} % Estilo de los url pasa a Sans Serif.
+
+
+
+%%% EQUATIONS %%%
+\usepackage{mathtools}
+
+\usepackage[
+backend=biber,	% Backend para las referencias (no modificar)
+style=apa, 		% Estilo APA de bibliografía
+sortcites,		% Para tener ordenadas las citas
+natbib=true,	% Utiliza natbib
+url=true, 		% Para que aparezca o no la url
+doi=true,		% Para que aparezca o no el DOI
+isbn=false 		% Para que aparezca o no el ISBN
+]{biblatex}
+\addbibresource{bibliography/biblio.bib}
+
+
+
+
+
+\usepackage{listings}
+
+\definecolor{lightgreen}{RGB}{247,253,251}
+\definecolor{newgreen}{RGB}{7,94,70}
+\definecolor{bordergreen}{RGB}{101,223,190}
+
+
+\newenvironment{myidea}{\begin{myideabox}\centering\LARGE\faLightbulbO\tcblower}
+{\end{myideabox}}
+
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+
+\usepackage{listings}
+\usepackage{xcolor}
+\definecolor{lightgreen}{RGB}{247,253,251}
+\definecolor{newgreen}{RGB}{7,94,70}
+\definecolor{bordergreen}{RGB}{101,223,190}
+\usepackage{svg}
+% \newenvironment{myidea}
+
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+
+
+% Định nghĩa cú pháp JavaScript cho Listings
+\lstdefinelanguage{JavaScript}{
+    keywords={break, case, catch, continue, debugger, default, delete, do, else, finally, for, function, if, in, instanceof, new, return, switch, throw, try, typeof, var, void, while, with, let, const},
+    morekeywords={[2]true,false,null,undefined,NaN,Infinity},
+    morekeywords={[3]console,window,document,Array,Object,String,Number,Boolean,JSON,Math,Date,RegExp},
+    keywordstyle=\color{blue},
+    keywordstyle={[2]\color{cyan}},
+    keywordstyle={[3]\color{teal}},
+    identifierstyle=\color{black},
+    commentstyle=\color{gray}\ttfamily,
+    stringstyle=\color{red},
+    basicstyle=\ttfamily,
+    sensitive=true,
+    morecomment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]",
+    morestring=[b]'
+}
+
+\lstdefinelanguage{json}{
+    basicstyle=\ttfamily,
+    showstringspaces=false,
+    breaklines=true,
+    morestring=[b]",
+    morecomment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    keywordstyle=\color{blue},
+    stringstyle=\color{red}
+}
+
+\lstset{
+  language=JavaScript,       % Xác định ngôn ngữ lập trình
+  basicstyle=\ttfamily,      % Font chữ cố định
+  keywordstyle=\color{blue}, % Màu từ khóa (tuỳ chỉnh nếu cần)
+  commentstyle=\color{gray}, % Màu chú thích
+  stringstyle=\color{red},   % Màu chuỗi
+}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+
+
+

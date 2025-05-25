@@ -1,0 +1,171 @@
+% Define package
+\usepackage{tikz}
+\usetikzlibrary{intersections}
+% \usepackage{fouriernc} % Gói cho đậm hết
+\usepackage{tikz-3dplot} 
+\usepackage{minted}
+% Define color
+
+
+
+
+
+%--------------------------------------------------------
+% Nơi định nghĩa các biến môi trường, tham số, alias, môi trường code, môi trường hình ảnh, môi trường toán
+%--------------------------------------------------------
+\usepackage{listings}
+\usepackage{xcolor}
+\definecolor{lightgreen}{RGB}{247,253,251}
+\definecolor{newgreen}{RGB}{7,94,70}
+\definecolor{bordergreen}{RGB}{101,223,190}
+\definecolor{caf6328}{RGB}{175,99,40}
+\definecolor{ca25425}{RGB}{162,84,37}
+\definecolor{c3cb44a}{RGB}{60,180,74}
+\definecolor{c4c9bd5}{RGB}{76,155,213}
+\definecolor{ced2c39}{RGB}{237,44,57}
+\definecolor{cffcf68}{RGB}{255,207,104}
+\definecolor{ccb202c}{RGB}{203,32,44}
+\definecolor{cf5b445}{RGB}{245,180,69}
+\definecolor{c3688c8}{RGB}{54,136,200}
+\definecolor{c0e9247}{RGB}{14,146,71}
+\definecolor{cb52025}{RGB}{181,32,37}
+\definecolor{c04803d}{RGB}{4,128,61}
+\definecolor{c0261a4}{RGB}{2,97,164}
+\definecolor{cf09820}{RGB}{240,152,32}
+\definecolor{ce2e4e6}{RGB}{226,228,230}
+\definecolor{cof}{RGB}{219,144,71}
+\definecolor{pur}{RGB}{186,146,162}
+\definecolor{greeo}{RGB}{91,173,69}
+\definecolor{greet}{RGB}{52,111,72}
+
+\definecolor{do}{RGB}{206, 22,40}
+\definecolor{do1}{RGB}{235, 161,169}
+\definecolor{do2}{RGB}{220, 92, 104}
+
+\usepackage{svg}
+
+% \newenvironment{myidea}{\begin{myideabox}\centering\LARGE\faLightbulbO\tcblower}
+% {\end{myideabox}}
+
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+
+
+% Định nghĩa cú pháp JavaScript cho Listings
+\lstdefinelanguage{JavaScript}{
+    keywords={break, case, catch, continue, debugger, default, delete, do, else, finally, for, function, if, in, instanceof, new, return, switch, throw, try, typeof, var, void, while, with, let, const},
+    morekeywords={[2]true,false,null,undefined,NaN,Infinity},
+    morekeywords={[3]console,window,document,Array,Object,String,Number,Boolean,JSON,Math,Date,RegExp},
+    keywordstyle=\color{blue},
+    keywordstyle={[2]\color{cyan}},
+    keywordstyle={[3]\color{teal}},
+    identifierstyle=\color{black},
+    commentstyle=\color{gray}\ttfamily,
+    stringstyle=\color{red},
+    basicstyle=\ttfamily,
+    sensitive=true,
+    morecomment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]",
+    morestring=[b]'
+}
+
+\lstdefinelanguage{json}{
+    basicstyle=\ttfamily,
+    showstringspaces=false,
+    breaklines=true,
+    morestring=[b]",
+    morecomment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    keywordstyle=\color{blue},
+    stringstyle=\color{red}
+}
+
+\lstset{
+  language=JavaScript,       % Xác định ngôn ngữ lập trình
+  basicstyle=\ttfamily,      % Font chữ cố định
+  keywordstyle=\color{blue}, % Màu từ khóa (tuỳ chỉnh nếu cần)
+  commentstyle=\color{gray}, % Màu chú thích
+  stringstyle=\color{red},   % Màu chuỗi
+}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Các gói box
+
+
+
+
+\usepackage[most]{tcolorbox}
+
+% gói toán
+\usepackage{tikzpagenodes}
+\usepackage[tikz]{bclogo}
+\usetikzlibrary{shapes.multipart,shapes.symbols,shadows.blur,shapes.geometric}
+\usepackage{fontawesome}
+
+
+\usepackage{tcolorbox}
+\newtcolorbox{mynote}{% 
+enhanced, left=0.5cm, breakable, 
+rotate=3,
+colback=yellow!20, colbacktitle=yellow!20, colframe=yellow!20, 
+sharp corners, 
+width=90mm, 
+fonttitle=\Large\bfseries, 
+title=\textcolor{green!70!black}{Ghi chú}, 
+overlay={\draw[dash pattern=on 5pt off 2pt,line width=1.5pt,green!70!black,opacity=0.75] 
+([yshift=-19pt,xshift=0.675cm]frame.north west)--([yshift=-19pt]frame.north east);
+\fill[green!70!black](frame.north west)--++(-90:4mm)--++(-45:3mm)--++(45:3mm)|-cycle;}, drop fuzzy shadow=gray!50 } 
+\usepackage{oplotsymbl}
+
+% Info Box (title and numbered box):
+\RequirePackage{tcolorbox}
+\definecolor{bg_blue}{HTML}{cde4ff}
+\definecolor{frame_grey}{HTML}{404040}
+\newcounter{infoboxCounter}
+\setcounter{infoboxCounter}{0}
+\newcommand{\infoboxbgcolor}{}
+\newcommand{\infoboxframecolor}{}
+\newcommand{\SetInfoBoxBgColor}[1]{\renewcommand{\infoboxbgcolor}{#1}} % command to change box color
+\newcommand{\SetInfoBoxFrameColor}[1]{\renewcommand{\infoboxframecolor}{#1}} % command to change frame color
+\SetInfoBoxBgColor{bg_blue} % default background color
+\SetInfoBoxFrameColor{NTNU_blue} % default frame color
+\newtcolorbox[use counter=infoboxCounter,
+                number within= section,
+                number freestyle={\noexpand\thesection-\noexpand\arabic{\tcbcounter}}
+                ]
+                {infobox}[2][]%
+    {boxrule = 1.5pt,
+    colback=\infoboxbgcolor,
+    colframe = \infoboxframecolor,
+    rounded corners,
+    arc = 6pt,   % corners roundness
+    title=\bfseries\sffamily #2 \hfill %\theinfoboxCounter,
+    #1
+}
+\definecolor{NTNU_blue}{HTML}{2E5AAC}
